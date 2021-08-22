@@ -1,0 +1,12 @@
+select  B1.N, 
+CASE 
+WHEN B1.NODE='Undetermined' AND B2.P IS NOT NULL THEN 'Inner'
+WHEN B1.NODE='Undetermined' AND B2.P IS NULL THEN 'Leaf'
+WHEN B1.NODE='Root' THEN 'Root' END as NodeType
+FROM (Select distinct N,
+     CASE 
+     WHEN P IS NULL THEN 'Root'
+     ELSE 'Undetermined' END as Node from BST) B1
+     left outer join
+(Select distinct P from BST where P is not null) B2 ON B1.N=B2.P
+order by B1.N;
